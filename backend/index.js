@@ -406,19 +406,25 @@ const runMigrations = async () => {
     const connection = await pool.getConnection();
     console.log('Verificando esquema de base de datos...');
     
-    // Check if users table exists
+    // Always run schema.sql if tables don't exist
+    // Check if 'users' table exists as a proxy for database initialization
     const [tables] = await connection.query("SHOW TABLES LIKE 'users'");
     if (tables.length === 0) {
         console.log('Tablas no encontradas. Inicializando base de datos desde schema.sql...');
         const schemaPath = path.join(__dirname, 'schema.sql');
         const schema = fs.readFileSync(schemaPath, 'utf8');
         // Remove CREATE DATABASE and USE commands that might conflict with cloud provider
+        // Also split by ; to run one by one if needed, but multipleStatements=true handles it
         const queries = schema
-            .replace(/CREATE DATABASE.*;/g, '')
-            .replace(/USE.*;/g, '');
+            .replace(/CREATE DATABASE[\s\S]*?;/g, '')
+            .replace(/USE[\s\S]*?;/g, '');
             
         await connection.query(queries);
         console.log('Base de datos inicializada correctamente.');
+        
+        // Return early to avoid running ALTER TABLE on just created tables
+        connection.release();
+        return;
     }
 
     // Add columns to products if they don't exist

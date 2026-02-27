@@ -1,6 +1,6 @@
 -- Base de datos para Integra Tech (MySQL)
-CREATE DATABASE IF NOT EXISTS integra_tech;
-USE integra_tech;
+-- CREATE DATABASE IF NOT EXISTS integra_tech;
+-- USE integra_tech;
 
 -- Usuarios (Combina auth.users y profiles de Supabase)
 CREATE TABLE IF NOT EXISTS users (
