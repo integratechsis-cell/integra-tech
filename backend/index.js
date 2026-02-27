@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const pool = require('./db');
 const { v4: uuidv4 } = require('uuid'); // Need to install uuid
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -404,6 +406,21 @@ const runMigrations = async () => {
     const connection = await pool.getConnection();
     console.log('Verificando esquema de base de datos...');
     
+    // Check if users table exists
+    const [tables] = await connection.query("SHOW TABLES LIKE 'users'");
+    if (tables.length === 0) {
+        console.log('Tablas no encontradas. Inicializando base de datos desde schema.sql...');
+        const schemaPath = path.join(__dirname, 'schema.sql');
+        const schema = fs.readFileSync(schemaPath, 'utf8');
+        // Remove CREATE DATABASE and USE commands that might conflict with cloud provider
+        const queries = schema
+            .replace(/CREATE DATABASE.*;/g, '')
+            .replace(/USE.*;/g, '');
+            
+        await connection.query(queries);
+        console.log('Base de datos inicializada correctamente.');
+    }
+
     // Add columns to products if they don't exist
     const productColumns = [
       'is_promotion BOOLEAN DEFAULT FALSE',
