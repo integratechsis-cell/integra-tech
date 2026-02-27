@@ -421,12 +421,9 @@ const runMigrations = async () => {
             
         await connection.query(queries);
         console.log('Base de datos inicializada correctamente.');
-        
-        // Return early to avoid running ALTER TABLE on just created tables
-        connection.release();
-        return;
     }
-
+    
+    // Always run column checks, even if tables existed
     // Add columns to products if they don't exist
     const productColumns = [
       'is_promotion BOOLEAN DEFAULT FALSE',
