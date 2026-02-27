@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useData } from '../../contexts/DataContext';
-import { Search, User as UserIcon, Shield, Plus, X, BookOpen, Check, Trash2, Lock, Unlock, Key } from 'lucide-react';
+import { Search, User as UserIcon, Shield, Plus, X, BookOpen, Check, Trash2, Lock, Unlock, Key, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SEO } from '../../components/common/SEO';
 
 export const Users: React.FC = () => {
-  const { users, courses, grades, updateUserRole, createStudent, enrollUserInCourse, unenrollUserFromCourse, toggleUserStatus, resetUserPassword, deleteUser } = useData();
+  const { users, courses, grades, updateUserRole, createStudent, enrollUserInCourse, unenrollUserFromCourse, toggleUserStatus, resetUserPassword, deleteUser, refreshData } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
@@ -93,13 +93,30 @@ export const Users: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          Nuevo Estudiante
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            onClick={async () => {
+              try {
+                await refreshData();
+                toast.success('Datos actualizados');
+              } catch (error) {
+                toast.error('Error al actualizar datos');
+              }
+            }}
+            className="w-full sm:w-auto bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+            title="Actualizar lista de usuarios"
+          >
+            <RefreshCw className="w-5 h-5" />
+            <span className="sm:hidden">Actualizar</span>
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            Nuevo Estudiante
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
