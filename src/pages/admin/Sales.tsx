@@ -53,12 +53,12 @@ export const Sales: React.FC = () => {
         };
         
         // Colors - "Industrias Borcelle" Blue Theme
-        const deepBlue: [number, number, number] = [20, 35, 80];      // #142350 - Dark Navy (Headers/Footer)
-        const mediumBlue: [number, number, number] = [40, 80, 160];   // #2850A0 - Primary Blue
-        const brightBlue: [number, number, number] = [60, 130, 240];  // #3C82F0 - Highlight Blue
-        const lightBlue: [number, number, number] = [220, 235, 255];  // #DCEBFF - Very light background
-        const grayText: [number, number, number] = [80, 80, 80];
-        const white: [number, number, number] = [255, 255, 255];
+        const deepBlue = [20, 35, 80] as [number, number, number];      // #142350 - Dark Navy (Headers/Footer)
+        const mediumBlue = [40, 80, 160] as [number, number, number];   // #2850A0 - Primary Blue
+        const brightBlue = [60, 130, 240] as [number, number, number];  // #3C82F0 - Highlight Blue
+        const lightBlue = [220, 235, 255] as [number, number, number];  // #DCEBFF - Very light background
+        const grayText = [80, 80, 80] as [number, number, number];
+        const white = [255, 255, 255] as [number, number, number];
 
         // --- GEOMETRIC HEADER (Top Right) ---
         // 1. Large Light Blue Diagonal
